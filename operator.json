@@ -1,0 +1,22 @@
+{
+  "name": "ANOVA",
+  "description": "Analysis Of Variance: test for significant differences among group means.",
+  "tags": ["statistical testing", "test", "linear model"],
+  "authors": ["tercen"],
+  "urls": ["https://github.com/tercen/anova_operator"],
+  "container": "tercen/anova_operator:1.0.0",
+  "properties": [
+   {
+    "kind": "EnumeratedProperty",
+    "name": "method",
+    "defaultValue": "one.way",
+    "values": [
+      "one.way",
+      "two.way"
+    ],
+    "description": "Whether to consider interactions between effects (two.way) or not (one.way) in the model."
+  }
+  ]
+}
+
+
