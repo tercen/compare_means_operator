@@ -1,22 +1,44 @@
 {
-  "name": "ANOVA",
-  "description": "Analysis Of Variance: test for significant differences among group means.",
+  "name": "Compare means",
+  "description": "Test for significant differences among group means and display the results.",
   "tags": ["statistical testing", "test", "linear model"],
   "authors": ["tercen"],
-  "urls": ["https://github.com/tercen/anova_operator"],
-  "container": "tercen/anova_operator:1.0.0",
+  "urls": ["https://github.com/tercen/compare_means_operator"],
+  "container": "tercen/compare_means_operator:latest",
   "properties": [
    {
-    "kind": "EnumeratedProperty",
-    "name": "method",
-    "defaultValue": "one.way",
+    "kind": "BooleanProperty",
+    "name": "equal_variances",
+    "defaultValue": false,
+    "description": "Do groups to compare have an equal variance? If yes, ANOVA and t-test will be used. If not (default) Kruskal-Wallis and Wilcoxon tests will be applied."
+  },
+     {
+    "kind": "StringProperty",
+    "name": "comparison",
+    "defaultValue": "pairwise",
     "values": [
-      "one.way",
-      "two.way"
+      "pairwise",
+      "all",
+      "reference"
     ],
-    "description": "Whether to consider interactions between effects (two.way) or not (one.way) in the model."
+    "description": "Which comparison to do for post-hoc tests (pairwise, comparison to the mean of all samples, comparison to a reference group)."
+  },
+     {
+    "kind": "DoubleProperty",
+    "name": "reference_index",
+    "defaultValue": 1,
+    "description": "Index of the group used as reference (only used if comparison is set to reference")."
+  },
+     {
+    "kind": "EnumeratedProperty",
+    "name": "plot_type",
+    "defaultValue": "png",
+    "values": [
+      "png",
+      "pdf",
+      "svg"
+    ],
+    "description": "Output file format."
   }
   ]
 }
-
-
