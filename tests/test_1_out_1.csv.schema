@@ -1,0 +1,45 @@
+{
+  "kind": "TableSchema",
+  "columns": [
+    {
+      "kind": "ColumnSchema",
+      "name": ".ri",
+      "type": "int32"
+    },
+    {
+      "kind": "ColumnSchema",
+      "name": "ds1.p",
+      "type": "double"
+    },
+    {
+      "kind": "ColumnSchema",
+      "name": "ds1.p.adj",
+      "type": "double"
+    },
+    {
+      "kind": "ColumnSchema",
+      "name": "ds1.p.format",
+      "type": "string"
+    },
+    {
+      "kind": "ColumnSchema",
+      "name": "ds1.p.signif",
+      "type": "string"
+    },
+    {
+      "kind": "ColumnSchema",
+      "name": "ds1.method",
+      "type": "string"
+    },
+    {
+      "kind": "ColumnSchema",
+      "name": "ds1.group1",
+      "type": "string"
+    },
+    {
+      "kind": "ColumnSchema",
+      "name": "ds1.group2",
+      "type": "string"
+    }
+  ]
+}
