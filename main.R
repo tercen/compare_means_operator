@@ -10,8 +10,6 @@ suppressPackageStartupMessages({
 
 ctx = tercenCtx()
 
-if(length(ctx$colors) < 1) stop("A color factor is required.")
-
 equal_variances <- ctx$op.value('equal_variances', as.logical, FALSE)
 comparison <- ctx$op.value('comparison', as.character, 'pairwise')
 reference_index <- ctx$op.value('reference_index', as.double, 1)
