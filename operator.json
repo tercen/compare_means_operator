@@ -19,7 +19,8 @@
     "values": [
       "pairwise",
       "all",
-      "reference"
+      "reference",
+      "groups"
     ],
     "description": "Which comparison to do for post-hoc tests (pairwise, comparison to the mean of all samples, comparison to a reference group)."
   },
@@ -29,16 +30,39 @@
     "defaultValue": 1,
     "description": "Index of the group used as reference (only used if comparison is set to reference")."
   },
-     {
+  {
     "kind": "EnumeratedProperty",
     "name": "plot_type",
     "defaultValue": "png",
     "values": [
       "png",
       "pdf",
-      "svg"
+      "svg",
+      "svg2"
     ],
     "description": "Output file format."
+  },
+  {
+    "kind": "EnumeratedProperty",
+    "name": "pval_label",
+    "defaultValue": "p.signif",
+    "values": [
+      "p.signif",
+      "p.format"
+    ],
+    "description": "How to display p-values (p.signif = stars, p.format = p-values)."
+   },
+   {
+    "kind": "DoubleProperty",
+    "name": "plot_width",
+    "defaultValue": 800,
+    "description": "Plot width (in pixels)."
+  },
+     {
+    "kind": "DoubleProperty",
+    "name": "plot_height",
+    "defaultValue": 600,
+    "description": "Plot height (in pixels)."
   }
   ]
 }
