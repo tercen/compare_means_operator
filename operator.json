@@ -28,7 +28,7 @@
     "kind": "DoubleProperty",
     "name": "reference_index",
     "defaultValue": 1,
-    "description": "Index of the group used as reference (only used if comparison is set to reference")."
+    "description": "Index of the group used as reference (only used if comparison is set to reference)."
   },
   {
     "kind": "EnumeratedProperty",
