@@ -4,7 +4,7 @@
   "tags": ["statistical testing", "test", "linear model"],
   "authors": ["tercen"],
   "urls": ["https://github.com/tercen/compare_means_operator"],
-  "container": "tercen/compare_means_operator:0.1.0",
+  "container": "tercen/compare_means_operator:0.1.1",
   "properties": [
    {
     "kind": "BooleanProperty",
@@ -41,7 +41,18 @@
       "median_range"
     ],
     "description": "Which aggregates and error bars to display on top of individual data points."
-  }
+  },
+    {
+    "kind": "EnumeratedProperty",
+    "name": "displayed.box",
+    "defaultValue": "none",
+    "values": [
+      "none",
+      "boxplot",
+      "violin"
+    ],
+    "description": "Display a shape to visualise data distribution (boxplot, violin, or none)."
+  },
      {
     "kind": "DoubleProperty",
     "name": "reference_index",

@@ -18,7 +18,11 @@ reference_index <- ctx$op.value('reference_index', as.double, 1)
 plot_type <- ctx$op.value('plot_type', as.character, "png")
 
 displayed.aggregate <- ctx$op.value('displayed.aggregate', as.character, "mean_ci")
-
+displayed.aggregate <- c(gsub("_.*", "", displayed.aggregate), displayed.aggregate)
+displayed.box <- ctx$op.value('displayed.box', as.character, "boxplot")
+if(displayed.box != "none") {
+  displayed.aggregate <- c(displayed.box, displayed.aggregate)
+}
 pval_label <- ctx$op.value('pval_label', as.character, "p.signif")
 
 plot_width <- ctx$op.value('plot_width', as.double, 800)
@@ -117,7 +121,6 @@ do.plot <- function(df) {
     mutate(across(everything(), ~ paste0(cur_column(), " = ", .x))) %>%
     tidyr::unite(title, everything(), sep = "; ")
 
-  
   p <- ggdotplot(
     df,
     x = ".x",
@@ -125,7 +128,8 @@ do.plot <- function(df) {
     color = col_names,
     palette = "npg", 
     add = displayed.aggregate,
-    add.params = list(color = "black", size = 0.5)
+    add.params = list(color = "black", size = 0.5),
+    error.plot = "errorbar"
   ) + 
     stat_compare_means(
       label = pval_label,
@@ -165,10 +169,12 @@ do.plot <- function(df) {
     mutate(.ci = df$.ci[1], .ri = df$.ri[1])
 }
 
-plts <- df %>% 
-  group_split(.ci, .ri) %>%
-  lapply(do.plot) %>%
-  bind_rows()
+plts <- suppressWarnings(suppressMessages({
+  df %>% 
+    group_split(.ci, .ri) %>%
+    lapply(do.plot) %>%
+    bind_rows()
+}))
 
 join_png <- tim::plot_file_to_df(plts$filename, filename = paste0("Boxplot.", plot_type)) %>% 
   bind_cols(plts %>% select(.ci, .ri)) %>%
