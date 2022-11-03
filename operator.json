@@ -4,7 +4,7 @@
   "tags": ["statistical testing", "test", "linear model"],
   "authors": ["tercen"],
   "urls": ["https://github.com/tercen/compare_means_operator"],
-  "container": "tercen/compare_means_operator:0.0.3",
+  "container": "tercen/compare_means_operator:0.1.0",
   "properties": [
    {
     "kind": "BooleanProperty",
