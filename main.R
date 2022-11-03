@@ -10,10 +10,14 @@ suppressPackageStartupMessages({
 
 ctx = tercenCtx()
 
+set.seed(123)
+
 equal_variances <- ctx$op.value('equal_variances', as.logical, FALSE)
 comparison <- ctx$op.value('comparison', as.character, 'pairwise')
 reference_index <- ctx$op.value('reference_index', as.double, 1)
 plot_type <- ctx$op.value('plot_type', as.character, "png")
+
+displayed.aggregate <- ctx$op.value('displayed.aggregate', as.character, "mean_ci")
 
 pval_label <- ctx$op.value('pval_label', as.character, "p.signif")
 
@@ -49,16 +53,23 @@ if(length(ctx$colors) == 0) {
 
 form <- formula(paste0(".y ~ .x"))
 
-df <- ctx$select(unique(c(".ci", ".ri", ".y", xAxis_str, col_names))) %>%
+cval <- ctx$cselect() %>%
+  mutate(.ci = seq_len(nrow(.)) - 1L)
+rval <- ctx$rselect() %>%
+  mutate(.ri = seq_len(nrow(.)) - 1L)
+cnames <- ctx$cnames
+if(cnames[[1]] == "") cnames <- ".all"
+rnames <- ctx$rnames
+if(rnames[[1]] == "") rnames <- ".all"
+if(cnames[[1]] == "" & rnames[[1]] == "") {
+  cnames <- ".all.x"
+  rnames <- ".all.y"
+}
+
+df <- ctx$select(unique(c(".ci", ".ri", ".y", xAxis_str, col_names))) %>% 
+  left_join(cval, ".ci") %>%
+  left_join(rval, ".ri") %>%
   group_by(.ci, .ri) 
-# 
-# df <- df %>% group_by_at(c(".ci", ".ri", xAxis_str, col_names)) %>%
-#   count() %>%
-#   filter(n > 2) %>%
-#   ungroup() %>%
-#   select(.ci, .ri) %>%
-#   inner_join(df, c(".ci", ".ri")) %>%
-#   group_by(.ci, .ri) 
 
 if(col_names != unlist(xAxis) & length(ctx$colors) > 0) {
   df$.x <- paste(df$.x, df[[col_names]], sep = "_")
@@ -100,20 +111,28 @@ do.plot <- function(df) {
   uniq <- unique(df$.x)
   idx <- unlist(lapply(combs, function(x) all(x %in% uniq)))
   
-  p <- ggboxplot(
+  plot.title <- df %>% head(1) %>%
+    select(matches(unlist(c(cnames, rnames)))) %>%
+    select(!contains(".all")) %>%
+    mutate(across(everything(), ~ paste0(cur_column(), " = ", .x))) %>%
+    tidyr::unite(title, everything(), sep = "; ")
+
+  
+  p <- ggdotplot(
     df,
     x = ".x",
     y = ".y",
     color = col_names,
     palette = "npg", 
-    add = "jitter",
-    facet.by = c(".ri", ".ci")
+    add = displayed.aggregate,
+    add.params = list(color = "black", size = 0.5)
   ) + 
     stat_compare_means(
       label = pval_label,
       method = post_hoc_method,
       comparisons = combs[idx],
-      ref.group = ref.group
+      ref.group = ref.group,
+      step.increase = 0.2
     )
   
   p <- p +
@@ -121,9 +140,9 @@ do.plot <- function(df) {
       label.y = layer_scales(p)$y$range$range[2] * 1.1,
       method = global_method
     ) +
-    theme_minimal(base_family = "sans") +
-    labs(x = xAxis[[1]], y = ctx$yAxis[[1]], color = col_names)
-  
+    theme_classic(base_family = "sans") +
+    labs(title = plot.title[[1]], x = xAxis[[1]], y = ctx$yAxis[[1]], color = col_names)
+
   if(plot_type ==  "svg2") {
     type <- "svg"
     device <- svg
@@ -154,16 +173,5 @@ plts <- df %>%
 join_png <- tim::plot_file_to_df(plts$filename, filename = paste0("Boxplot.", plot_type)) %>% 
   bind_cols(plts %>% select(.ci, .ri)) %>%
   ctx$addNamespace() # %>%
-# as_relation()
-
-# join_res <- df_out %>%
-#   as_relation() %>%
-#   {if(ctx$cnames[[1]] != "") left_join_relation(., ctx$crelation, ".ci", ctx$crelation$rids)  else .} %>%
-#   {if(ctx$rnames[[1]] != "") left_join_relation(., ctx$rrelation, ".ri", ctx$rrelation$rids)  else .} %>%
-#   left_join_relation(join_png, list(), list()) %>%
-#   as_join_operator(list(), list())
-# 
-# join_res %>%
-#   save_relation(ctx)
 
 ctx$save(list(df_out, join_png))

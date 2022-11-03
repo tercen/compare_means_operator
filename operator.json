@@ -13,7 +13,7 @@
     "description": "Do groups to compare have an equal variance? If yes, ANOVA and t-test will be used. If not (default) Kruskal-Wallis and Wilcoxon tests will be applied."
   },
      {
-    "kind": "StringProperty",
+    "kind": "EnumeratedProperty",
     "name": "comparison",
     "defaultValue": "pairwise",
     "values": [
@@ -24,6 +24,24 @@
     ],
     "description": "Which comparison to do for post-hoc tests (pairwise, comparison to the mean of all samples, comparison to a reference group)."
   },
+    {
+    "kind": "EnumeratedProperty",
+    "name": "displayed.aggregate",
+    "defaultValue": "mean_ci",
+    "values": [
+      "mean",
+      "mean_ci",
+      "mean_sd",
+      "mean_range",
+      "median",
+      "median_iqr",
+      "median_hilow",
+      "median_q1q3",
+      "median_mad",
+      "median_range"
+    ],
+    "description": "Which aggregates and error bars to display on top of individual data points."
+  }
      {
     "kind": "DoubleProperty",
     "name": "reference_index",
