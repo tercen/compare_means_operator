@@ -19,7 +19,7 @@ plot_type <- ctx$op.value('plot_type', as.character, "png")
 
 displayed.aggregate <- ctx$op.value('displayed.aggregate', as.character, "mean_ci")
 displayed.aggregate <- c(gsub("_.*", "", displayed.aggregate), displayed.aggregate)
-displayed.box <- ctx$op.value('displayed.box', as.character, "boxplot")
+displayed.box <- ctx$op.value('displayed.box', as.character, "none")
 if(displayed.box != "none") {
   displayed.aggregate <- c(displayed.box, displayed.aggregate)
 }
@@ -176,8 +176,27 @@ plts <- suppressWarnings(suppressMessages({
     bind_rows()
 }))
 
-join_png <- tim::plot_file_to_df(plts$filename, filename = paste0("Boxplot.", plot_type)) %>% 
+plot_file_to_df <- function (file_path, filename = NULL)  {
+  if (is.null(filename)) 
+    filename <- basename(file_path)
+  type <- tools::file_ext(filename)
+  mimetype <- sapply(type, function(x) switch(x, png = "image/png",
+                                              svg = "image/svg+xml",
+                                              svg2 = "image/svg+xml",
+                                              pdf = "application/pdf", "unknown"))
+  output_str <- sapply(file_path, function(x) {
+    base64enc::base64encode(readBin(x, "raw", file.info(x)[1, 
+                                                           "size"]), "txt")
+  })
+  df <- tibble::tibble(filename = filename, mimetype = mimetype, .content = output_str)
+  return(df)
+}
+
+join_png <- plot_file_to_df(
+  plts$filename,
+  filename = paste0("Chart", paste0("_ci", plts$.ci, "_ri", plts$.ri, "."), plot_type)
+) %>% 
   bind_cols(plts %>% select(.ci, .ri)) %>%
-  ctx$addNamespace() # %>%
+  ctx$addNamespace()
 
 ctx$save(list(df_out, join_png))

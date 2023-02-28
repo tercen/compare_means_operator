@@ -1,10 +1,10 @@
 {
   "name": "Compare means",
   "description": "Test for significant differences among group means and display the results.",
-  "tags": ["statistical testing", "test", "linear model"],
+  "tags": ["statistical testing", "data visualisation", "linear model"],
   "authors": ["tercen"],
   "urls": ["https://github.com/tercen/compare_means_operator"],
-  "container": "tercen/compare_means_operator:0.1.1",
+  "container": "tercen/compare_means_operator:latest",
   "properties": [
    {
     "kind": "BooleanProperty",
