@@ -44,6 +44,17 @@
   },
     {
     "kind": "EnumeratedProperty",
+    "name": "first.plot.layer",
+    "defaultValue": "dotplot",
+    "values": [
+      "dotplot",
+      "boxplot",
+      "violin"
+    ],
+    "description": "First plot layer to visualise data distribution (boxplot, violin, or dotplot)."
+  },
+    {
+    "kind": "EnumeratedProperty",
     "name": "displayed.box",
     "defaultValue": "none",
     "values": [
@@ -87,11 +98,23 @@
     "defaultValue": 800,
     "description": "Plot width (in pixels)."
   },
-     {
+  {
     "kind": "DoubleProperty",
     "name": "plot_height",
     "defaultValue": 600,
     "description": "Plot height (in pixels)."
+  },
+  {
+    "kind": "StringProperty",
+    "name": "y_limit_min",
+    "defaultValue": "",
+    "description": "Y axis lower limit (if empty, the minimum value of the data will be used)."
+  },
+  {
+    "kind": "StringProperty",
+    "name": "y_limit_max",
+    "defaultValue": "",
+    "description": "Y axis upper limit (if empty, the minimum value of the data will be used)."
   }
   ]
 }

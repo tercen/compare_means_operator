@@ -17,6 +17,9 @@ comparison <- ctx$op.value('comparison', as.character, 'pairwise')
 reference_index <- ctx$op.value('reference_index', as.double, 1)
 plot_type <- ctx$op.value('plot_type', as.character, "png")
 
+first.plot.layer <- ctx$op.value('first.plot.layer', as.character, "dotplot") %>%
+  paste0("gg", .)
+
 displayed.aggregate <- ctx$op.value('displayed.aggregate', as.character, "mean_ci")
 displayed.aggregate <- c(gsub("_.*", "", displayed.aggregate), displayed.aggregate)
 displayed.box <- ctx$op.value('displayed.box', as.character, "none")
@@ -28,6 +31,8 @@ pval_label <- ctx$op.value('pval_label', as.character, "p.signif")
 plot_width <- ctx$op.value('plot_width', as.double, 800)
 plot_height <- ctx$op.value('plot_height', as.double, 600)
 
+y_limit_min <- ctx$op.value('y_limit_min', as.character, "") %>% as.double()
+y_limit_max <- ctx$op.value('y_limit_max', as.character, "") %>% as.double()
 
 if(equal_variances) {
   global_method <- 'anova'
@@ -121,7 +126,7 @@ do.plot <- function(df) {
     mutate(across(everything(), ~ paste0(cur_column(), " = ", .x))) %>%
     tidyr::unite(title, everything(), sep = "; ")
 
-  p <- ggdotplot(
+  p <- do.call(first.plot.layer, list(
     df,
     x = ".x",
     y = ".y",
@@ -130,7 +135,7 @@ do.plot <- function(df) {
     add = displayed.aggregate,
     add.params = list(color = "black", size = 0.5),
     error.plot = "errorbar"
-  ) + 
+  )) + 
     stat_compare_means(
       label = pval_label,
       method = post_hoc_method,
@@ -145,7 +150,8 @@ do.plot <- function(df) {
       method = global_method
     ) +
     theme_classic(base_family = "sans") +
-    labs(title = plot.title[[1]], x = xAxis[[1]], y = ctx$yAxis[[1]], color = col_names)
+    labs(title = plot.title[[1]], x = xAxis[[1]], y = ctx$yAxis[[1]], color = col_names) +
+    ylim(y_limit_min, y_limit_max)
 
   if(plot_type ==  "svg2") {
     type <- "svg"
