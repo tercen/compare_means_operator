@@ -4,7 +4,6 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(rstatix)
   library(ggpubr)
-  library(svglite)
   library(tim)
 })
 
