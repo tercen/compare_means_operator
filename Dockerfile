@@ -1,7 +1,5 @@
 FROM tercen/runtime-r42:4.2.2-2
 
-USER root
-
 ENV RENV_VERSION 0.16.0
 RUN R -e "install.packages('remotes', repos = c(CRAN = 'https://cran.r-project.org'))"
 RUN R -e "remotes::install_github('rstudio/renv@${RENV_VERSION}')"
