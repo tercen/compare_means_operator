@@ -170,10 +170,16 @@ do.plot <- function(df) {
 }
 
 plts <- suppressWarnings(suppressMessages({
-  df %>% 
-    group_split(.ci, .ri) %>%
-    lapply(do.plot) %>%
-    bind_rows()
+  if(ctx$cnames[[1]] == "" & ctx$rnames[[1]] == "") {
+    df %>%
+      do.plot() %>%
+      bind_rows()
+  } else {
+    df %>%
+      group_split(.ci, .ri) %>%
+      lapply(do.plot) %>%
+      bind_rows()
+  }
 }))
 
 plot_file_to_df <- function (file_path, filename = NULL)  {
